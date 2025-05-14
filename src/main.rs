@@ -1,4 +1,5 @@
 use clap::Parser;
+use anyhow::{Context, Result};
 
 #[derive(Parser)]
 struct Cli {
@@ -9,10 +10,11 @@ struct Cli {
     /// If not provided, all known types will be organized.
     f_ext: Option<String>,
 }
-fn main() {
+fn main() -> Result<()> {
     let args = Cli::parse();
     let entries = std::fs::read_dir(&args.path)
-        .expect("Could not read directory");
+        .with_context(|| format!("Could not read directory `{}`", args.path.display()))?;
+
 
     for entry in entries {
         if let Ok(entry) = entry {
@@ -33,4 +35,5 @@ fn main() {
             }
         }
     }
+    Ok(())
 }
