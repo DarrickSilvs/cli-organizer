@@ -4,7 +4,7 @@ A minimal Rust-based CLI tool to organize files in a directory by extension. It 
 
 🔗 **Repo:** https://github.com/DarrickSilvs/cli-organizer
 
-![Screenshot](https://raw.githubusercontent.com/DarrickSilvs/cli-organizer/main/assets/example.png)
+![Screenshot](https://raw.githubusercontent.com/DarrickSilvs/cli-organizer/master/assets/example.png)
 
 ---
 
