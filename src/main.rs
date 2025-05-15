@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
+use std::fs::{read_dir, create_dir_all, rename};
 use clap::Parser;
 use anyhow::{Context, Result};
 
@@ -14,7 +15,7 @@ struct Cli {
 }
 fn main() -> Result<()> {
     let args = Cli::parse();
-    let entries = std::fs::read_dir(&args.path)
+    let entries = read_dir(&args.path)
         .with_context(|| format!("Could not read directory `{}`", args.path.display()))?;
 
     let mut folders: HashMap<String, Vec<PathBuf>> = HashMap::new();
@@ -43,6 +44,23 @@ fn main() -> Result<()> {
         }
     }
 
-    println!("{:#?}", folders);
+    for (folder_name, files) in &folders {
+        let targer_dir = args.path.join(folder_name);
+
+        // Create the directory if it doesn't exist
+        create_dir_all(&targer_dir)
+            .with_context(|| format!("Could not create folder `{}`", targer_dir.display()))?;
+
+        for file in files {
+            let file_name = file.file_name().unwrap();
+            let new_location = targer_dir.join(file_name);
+
+            rename(file, &new_location)
+                .with_context(|| format!("Failed to move {} to {}", file.display(), new_location.display()))?;
+
+            println!("Moved {} to {}", file.display(), new_location.display());
+        }
+    }
+
     Ok(())
 }
