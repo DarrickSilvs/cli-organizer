@@ -57,8 +57,6 @@ fn main() -> Result<()> {
 
             rename(file, &new_location)
                 .with_context(|| format!("Failed to move {} to {}", file.display(), new_location.display()))?;
-
-            println!("Moved {} to {}", file.display(), new_location.display());
         }
     }
 
